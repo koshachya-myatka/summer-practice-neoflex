@@ -1,4 +1,4 @@
-package ru.paramonova.producer_service;
+package ru.paramonova.producerservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
