@@ -13,9 +13,9 @@ import ru.paramonova.producerservice.publishers.MessageProducer;
 public class MessageController {
     private final MessageProducer messageProducer;
 
-    @PostMapping("/message")
-    public ResponseEntity<Void> sendMessage(@PathVariable String message) {
-        if (messageProducer.sendMessage(message)) {
+    @PostMapping("/message/{data}")
+    public ResponseEntity<Void> sendMessage(@PathVariable String data) {
+        if (messageProducer.sendMessage(data)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
