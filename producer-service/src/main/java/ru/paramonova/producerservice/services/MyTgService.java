@@ -64,13 +64,16 @@ public class MyTgService {
     }
 
     public Publication createPublication(PublicationWithoutIdDto publicationDto) {
-        Publication publication = objectMapper.convertValue(publicationDto, Publication.class);
+        Publication publication = Publication.builder()
+                .author(userRepository.findById(publicationDto.getAuthorId()).get())
+                .content(publicationDto.getContent())
+                .build();
         return publicationRepository.save(publication);
     }
 
     @SneakyThrows
     public Publication updatePublication(Publication publication, PublicationDto publicationDto) {
-        objectMapper.updateValue(publication, publicationDto);
+        publication.setContent(publicationDto.getContent());
         return publicationRepository.save(publication);
     }
 

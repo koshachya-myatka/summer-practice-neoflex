@@ -17,95 +17,98 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 public class MyTgController {
-    private final MyTgService service;
+    private final MyTgService myTgService;
 
     // ПОЛЬЗОВАТЕЛИ
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(service.findAllUsers());
+        return ResponseEntity.ok(myTgService.findAllUsers());
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
-        Optional<User> userOptional = service.findUserById(id);
+        Optional<User> userOptional = myTgService.findUserById(id);
         return userOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody UserWithoutIdDto userDto) {
-        if (service.findUserByNickname(userDto.getNickname()).isPresent()) {
+        if (myTgService.findUserByNickname(userDto.getNickname()).isPresent()) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(service.createUser(userDto));
+        return ResponseEntity.ok(myTgService.createUser(userDto));
     }
 
     @PutMapping("/users")
     public ResponseEntity<User> updateUser(@RequestBody UserDto userDto) {
-        Optional<User> userOptional = service.findUserById(userDto.getId());
+        Optional<User> userOptional = myTgService.findUserById(userDto.getId());
         if (userOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        if (myTgService.findUserByNickname(userDto.getNickname()).isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
         User updatedUser;
         try {
-            updatedUser = service.updateUser(userOptional.get(), userDto);
+            updatedUser = myTgService.updateUser(userOptional.get(), userDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        Optional<User> userOptional = service.findUserById(id);
+    @DeleteMapping("/users")
+    public ResponseEntity<Void> deleteUser(@RequestBody UserDto userDto) {
+        Optional<User> userOptional = myTgService.findUserById(userDto.getId());
         if (userOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        service.deleteUser(id);
+        myTgService.deleteUser(userDto.getId());
         return ResponseEntity.noContent().build();
     }
 
     // ПУБЛИКАЦИИ
     @GetMapping("/publications")
     public ResponseEntity<List<Publication>> getAllPublications() {
-        return ResponseEntity.ok(service.findAllPublications());
+        return ResponseEntity.ok(myTgService.findAllPublications());
     }
 
     @GetMapping("/publications/{id}")
     public ResponseEntity<Publication> getPublication(@PathVariable Long id) {
-        Optional<Publication> publicationOptional = service.findPublicationById(id);
+        Optional<Publication> publicationOptional = myTgService.findPublicationById(id);
         return publicationOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/publications")
     public ResponseEntity<Publication> createPublication(@RequestBody PublicationWithoutIdDto publicationDto) {
-        if (service.findUserById(publicationDto.getAuthorId()).isEmpty()) {
+        if (myTgService.findUserById(publicationDto.getAuthorId()).isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(service.createPublication(publicationDto));
+        return ResponseEntity.ok(myTgService.createPublication(publicationDto));
     }
 
     @PutMapping("/publications")
     public ResponseEntity<Publication> updatePublication(@RequestBody PublicationDto publicationDto) {
-        Optional<Publication> publicationOptional = service.findPublicationById(publicationDto.getId());
+        Optional<Publication> publicationOptional = myTgService.findPublicationById(publicationDto.getId());
         if (publicationOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Publication updatedPublication;
         try {
-            updatedPublication = service.updatePublication(publicationOptional.get(), publicationDto);
+            updatedPublication = myTgService.updatePublication(publicationOptional.get(), publicationDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(updatedPublication);
     }
 
-    @DeleteMapping("/publications/{id}")
-    public ResponseEntity<Void> deletePublication(@PathVariable Long id) {
-        Optional<Publication> publicationOptional = service.findPublicationById(id);
+    @DeleteMapping("/publications")
+    public ResponseEntity<Void> deletePublication(@RequestBody PublicationDto publicationDto) {
+        Optional<Publication> publicationOptional = myTgService.findPublicationById(publicationDto.getId());
         if (publicationOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        service.deletePublication(id);
+        myTgService.deletePublication(publicationDto.getId());
         return ResponseEntity.noContent().build();
     }
 }

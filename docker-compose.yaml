@@ -17,9 +17,7 @@ services:
       - 8080:8080    
     depends_on:
       - postgres
-      - connect
       - kafka
-      - consumer-service
     networks:
       - network
 
@@ -36,8 +34,8 @@ services:
     ports:
       - 8081:8081
     depends_on:
-      - connect
       - kafka
+      - connect
     networks:
       - network
 
@@ -49,8 +47,9 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}      
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ./postgres:/docker-entrypoint-initdb.d
+      - ./init.db:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data      
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
       interval: 5s
@@ -66,6 +65,7 @@ services:
     ports:
       - 8083:8083
     depends_on:
+      - postgres
       - kafka
     environment:
       - BOOTSTRAP_SERVERS=${KAFKA_BOOTSTRAP_SERVERS}
@@ -73,6 +73,7 @@ services:
       - CONFIG_STORAGE_TOPIC=my_connect_configs
       - OFFSET_STORAGE_TOPIC=my_connect_offsets
       - STATUS_STORAGE_TOPIC=my_connect_statuses
+      - LOG_LEVEL=info
     networks:
       - network
 
@@ -110,3 +111,6 @@ services:
 networks:
   network:
     driver: bridge
+  
+volumes:
+  postgres-data:

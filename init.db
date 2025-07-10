@@ -1,0 +1,16 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    nickname VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE publications (
+    id SERIAL PRIMARY KEY,
+    author_id INTEGER NOT NULL,
+    content TEXT,
+    FOREIGN KEY (author_id) REFERENCES users (id)
+);
+
+ALTER SYSTEM SET wal_level = logical;
+ALTER SYSTEM SET max_wal_senders = 10;
+ALTER SYSTEM SET max_replication_slots = 10;
+ALTER USER postgres WITH REPLICATION;
