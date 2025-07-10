@@ -28,6 +28,7 @@ docker compose up --build -d
     * curl -X DELETE http://localhost:8080/publications -H "Content-Type: application/json" -H "Accept: application/json" -d "{\"id\": 1,\"author_id\": 1, \"content\": \"mewmewmew222!\"}"
 
 ### consumer-service
+Настроен на чтение сообщений из топиков для таблиц бд, выводит их в свои логи.
 
 ## Информация для тренировочной части с Kafka:
 ### producer-service
