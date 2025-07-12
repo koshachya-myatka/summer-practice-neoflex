@@ -21,11 +21,13 @@ docker compose up --build -d
     * curl -X POST http://localhost:8080/users -H "Content-Type: application/json" -H "Accept: application/json" -d "{\"nickname\": \"purr\"}" 
     * curl -X POST http://localhost:8080/publications -H "Content-Type: application/json" -H "Accept: application/json" -d "{\"author_id\": 1, \"content\": \"mewmewmew!\"}"
 
-* PUT / DELETE
+* PUT
     * curl -X PUT http://localhost:8080/users -H "Content-Type: application/json" -H "Accept: application/json" -d "{\"id\": 1, \"nickname\": \"purr222\"}"
-    * curl -X DELETE http://localhost:8080/users -H "Content-Type: application/json" -H "Accept: application/json" -d "{\"id\": 1, \"nickname\": \"purr222\"}"
     * curl -X PUT http://localhost:8080/publications -H "Content-Type: application/json" -H "Accept: application/json" -d "{\"id\": 1,\"author_id\": 1, \"content\": \"mewmewmew222!\"}"
-    * curl -X DELETE http://localhost:8080/publications -H "Content-Type: application/json" -H "Accept: application/json" -d "{\"id\": 1,\"author_id\": 1, \"content\": \"mewmewmew222!\"}"
+
+* DELETE
+    * curl -X DELETE http://localhost:8080/users/1 
+    * curl -X DELETE http://localhost:8080/publications/1
 
 ### consumer-service
 Настроен на чтение сообщений из топиков для таблиц бд, выводит их в свои логи.

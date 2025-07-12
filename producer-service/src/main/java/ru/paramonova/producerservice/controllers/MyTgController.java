@@ -57,13 +57,13 @@ public class MyTgController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/users")
-    public ResponseEntity<Void> deleteUser(@RequestBody UserDto userDto) {
-        Optional<User> userOptional = myTgService.findUserById(userDto.getId());
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        Optional<User> userOptional = myTgService.findUserById(id);
         if (userOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        myTgService.deleteUser(userDto.getId());
+        myTgService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -102,13 +102,13 @@ public class MyTgController {
         return ResponseEntity.ok(updatedPublication);
     }
 
-    @DeleteMapping("/publications")
-    public ResponseEntity<Void> deletePublication(@RequestBody PublicationDto publicationDto) {
-        Optional<Publication> publicationOptional = myTgService.findPublicationById(publicationDto.getId());
+    @DeleteMapping("/publications/{id}")
+    public ResponseEntity<Void> deletePublication(@PathVariable Long id) {
+        Optional<Publication> publicationOptional = myTgService.findPublicationById(id);
         if (publicationOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        myTgService.deletePublication(publicationDto.getId());
+        myTgService.deletePublication(id);
         return ResponseEntity.noContent().build();
     }
 }
